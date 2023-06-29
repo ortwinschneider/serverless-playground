@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: knative-camelk-demo
+  namespace: knative-camelk-demo
+spec:
+  targetNamespaces:
+    - knative-camelk-demo

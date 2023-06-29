@@ -1,0 +1,69 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ''
+    app.openshift.io/vcs-uri: ''
+    serving.knative.dev/creator: opentlc-mgr
+    serving.knative.dev/lastModifier: opentlc-mgr
+  name: my-func
+  namespace: knative-functions-demo
+  labels:
+    app.kubernetes.io/instance: my-func
+    app.openshift.io/runtime: quarkus
+    boson.dev/function: 'true'
+    boson.dev/runtime: quarkus
+    function.knative.dev: 'true'
+    function.knative.dev/name: my-func
+    function.knative.dev/runtime: quarkus
+spec:
+  template:
+    metadata:
+      annotations:
+        app.openshift.io/vcs-ref: ''
+        app.openshift.io/vcs-uri: ''
+        autoscaling.knative.dev/min-scale: '2'
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: my-func
+        app.openshift.io/runtime: quarkus
+        boson.dev/function: 'true'
+        boson.dev/runtime: quarkus
+        function.knative.dev: 'true'
+        function.knative.dev/name: my-func
+        function.knative.dev/runtime: quarkus
+    spec:
+      containerConcurrency: 0
+      nodeSelector:
+        kubernetes.io/hostname: ip-10-0-169-199.us-east-2.compute.internal
+      volumes:
+        - name: my-func-data
+          persistentVolumeClaim:
+            claimName: knative-functions-data
+            readOnly: false
+      containers:
+        - env:
+            - name: BUILT
+              value: 20230131T101628
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/knative-functions-demo/my-func@sha256:1f6ac20589ce1a6642d2f90329a487fc4e4e8361d13559b9eec2ae38c8a0f4bd
+          livenessProbe:
+            httpGet:
+              path: /health/liveness
+              port: 0
+          name: user-container
+          volumeMounts:
+            - mountPath: /cloud-events
+              name: my-func-data
+              readOnly: false
+          readinessProbe:
+            httpGet:
+              path: /health/readiness
+              port: 0
+            successThreshold: 1
+          resources: {}
+      enableServiceLinks: false
+      timeoutSeconds: 300
+  traffic:
+    - latestRevision: true
+      percent: 100

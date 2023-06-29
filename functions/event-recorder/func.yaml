@@ -1,0 +1,37 @@
+specVersion: 0.34.0
+name: event-recorder
+runtime: quarkus
+registry: image-registry.openshift-image-registry.svc:5000/bobbycar-drogue
+image: image-registry.openshift-image-registry.svc:5000/bobbycar-drogue/event-recorder:latest
+imageDigest: sha256:38203365e1efaa553a5223ccaa652a1925e60a58afa184e5de1f2fa6e86b7ac6
+created: 2023-02-09T10:31:43.844461+01:00
+invocation:
+  format: cloudevent
+build:
+  buildpacks: []
+  builder: s2i
+  buildEnvs:
+  - name: BP_NATIVE_IMAGE
+    value: "false"
+  - name: BP_MAVEN_BUILT_ARTIFACT
+    value: func.yaml target/quarkus-app/lib/ target/quarkus-app/*.jar target/quarkus-app/app/
+      target/quarkus-app/quarkus/
+  - name: BP_MAVEN_BUILD_ARGUMENTS
+    value: package -DskipTests=true -Dmaven.javadoc.skip=true -Dquarkus.package.type=fast-jar
+  - name: MAVEN_S2I_ARTIFACT_DIRS
+    value: target/quarkus-app
+  - name: S2I_SOURCE_DEPLOYMENTS_FILTER
+    value: lib quarkus-run.jar app quarkus
+run:
+  volumes: []
+  envs:
+  - name: app.ce.path
+    value: /tmp/
+deploy:
+  namespace: bobbycar-drogue
+  annotations: {}
+  options: {}
+  labels: []
+  healthEndpoints:
+    liveness: /health/liveness
+    readiness: /health/readiness

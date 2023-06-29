@@ -1,0 +1,27 @@
+apiVersion: sources.knative.dev/v1beta1
+kind: KafkaSource
+metadata:
+  name: kafka-source
+  namespace: knative-eventing-demo
+spec:
+  bootstrapServers:
+    - 'bobbycar-cluster-kafka-bootstrap.bobbycar.svc:9092'
+  consumerGroup: kafka-kn-source-demo
+  initialOffset: latest
+  net:
+    sasl:
+      password: {}
+      type: {}
+      user: {}
+    tls:
+      caCert: {}
+      cert: {}
+      key: {}
+  sink:
+    ref:
+      apiVersion: messaging.knative.dev/v1
+      kind: Channel
+      name: my-kafka-channel
+      namespace: knative-eventing-demo
+  topics:
+    - serverless-orders

@@ -1,0 +1,6 @@
+
+  # Impl for handle-gps 
+
+  console.log(event.data.toString('ascii'));
+  console.log(JSON.stringify(event.data));
+  console.log(process.env.MESSAGE);

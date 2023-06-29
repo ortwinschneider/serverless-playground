@@ -1,0 +1,12 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: red-hat-camel-k
+  namespace: knative-camelk-demo
+spec:
+  channel: 1.8.x
+  installPlanApproval: Automatic
+  name: red-hat-camel-k
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: red-hat-camel-k-operator.v1.8.2-0.1675913507.p

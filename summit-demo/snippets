@@ -1,0 +1,11 @@
+
+## Enable Knative integration in Drogue Cloud
+spec:
+  knative:
+    endpoint:
+      url: http://broker-ingress.knative-eventing.svc.cluster.local/bobbycar-drogue/telemetry
+
+
+## Knative new trigger filters
+filters:
+  - cesql: "subject = 'carMetrics' AND device = 'deviceId'"
